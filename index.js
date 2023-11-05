@@ -75,6 +75,18 @@ async function run() {
       }
     });
 
+    // get one .. get one book
+    app.get("/books/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await booksCollection.findOne(query);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
     // get all borrow books
     app.get("/borrowBooks", async (req, res) => {
       try {

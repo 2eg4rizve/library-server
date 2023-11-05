@@ -29,10 +29,12 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
-    const categoryBooksCollection = client.db("LibraryManagement").collection("categoryBooks");
+    const categoryBooksCollection = client
+      .db("LibraryManagement")
+      .collection("categoryBooks");
     const booksCollection = client.db("LibraryManagement").collection("books");
 
-    //post single
+    //post single book
     app.post("/books", async (req, res) => {
       const newBook = req.body;
       console.log(newBook);
@@ -41,7 +43,15 @@ async function run() {
       res.send(result);
     });
 
-    //get all
+    // get all book
+    app.get("/books", async (req, res) => {
+      const cursor = booksCollection.find();
+      const result = await cursor.toArray();
+
+      res.send(result);
+    });
+
+    //get all categories
     app.get("/categories", async (req, res) => {
       const cursor = categoryBooksCollection.find();
       const result = await cursor.toArray();

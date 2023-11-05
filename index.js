@@ -51,6 +51,40 @@ async function run() {
       res.send(result);
     });
 
+     // update one book
+     app.put("/books/:id", async (req, res) => {
+      const id = req.params.id;
+
+      console.log("update id : ", id);
+
+      const filter = { _id: new ObjectId(id) };
+
+      const options = { upsert: true };
+
+      const updatedBook = req.body;
+
+      //const newProduct = { UserName, userEmail, photo, productName, bandName, type, price, shortDescription, rating }
+
+      const book = {
+        $set: {
+          // userName: updatedProduct.UserName,
+          // userEmail: updatedProduct.userEmail,
+          // photo: updatedProduct.photo,
+
+          // rating: updatedProduct.rating,
+
+          ...updatedBook
+        },
+      };
+
+      const result = await booksCollection.updateOne(
+        filter,
+        book,
+        options
+      );
+      res.send(result);
+    });
+
     //get all categories
     app.get("/categories", async (req, res) => {
       const cursor = categoryBooksCollection.find();

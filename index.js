@@ -39,98 +39,129 @@ async function run() {
 
     //post single book
     app.post("/books", async (req, res) => {
-      const newBook = req.body;
-      console.log(newBook);
+      try {
+        const newBook = req.body;
+        console.log(newBook);
 
-      const result = await booksCollection.insertOne(newBook);
-      res.send(result);
+        const result = await booksCollection.insertOne(newBook);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
     });
 
     //post single book for borrow
     app.post("/borrowBooks", async (req, res) => {
-      const newBook = req.body;
-      console.log(newBook);
+      try {
+        const newBook = req.body;
+        console.log(newBook);
 
-      const result = await borrowBooksCollection.insertOne(newBook);
-      res.send(result);
+        const result = await borrowBooksCollection.insertOne(newBook);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
     });
 
     // get all book
     app.get("/books", async (req, res) => {
-      const cursor = booksCollection.find();
-      const result = await cursor.toArray();
+      try {
+        const cursor = booksCollection.find();
+        const result = await cursor.toArray();
 
-      res.send(result);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
     });
 
     // get all borrow books
     app.get("/borrowBooks", async (req, res) => {
-      const cursor = borrowBooksCollection.find();
-      const result = await cursor.toArray();
+      try {
+        const cursor = borrowBooksCollection.find();
+        const result = await cursor.toArray();
 
-      res.send(result);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
     });
 
     // update one book
     app.put("/books/:id", async (req, res) => {
-      const id = req.params.id;
+      try {
+        const id = req.params.id;
 
-      console.log("update id : ", id);
+        console.log("update id : ", id);
 
-      const filter = { _id: new ObjectId(id) };
+        const filter = { _id: new ObjectId(id) };
 
-      const options = { upsert: true };
+        const options = { upsert: true };
 
-      const updatedBook = req.body;
+        const updatedBook = req.body;
 
-      //const newProduct = { UserName, userEmail, photo, productName, bandName, type, price, shortDescription, rating }
+        //const newProduct = { UserName, userEmail, photo, productName, bandName, type, price, shortDescription, rating }
 
-      const book = {
-        $set: {
-          // userName: updatedProduct.UserName,
-          // userEmail: updatedProduct.userEmail,
-          // photo: updatedProduct.photo,
+        const book = {
+          $set: {
+            // userName: updatedProduct.UserName,
+            // userEmail: updatedProduct.userEmail,
+            // photo: updatedProduct.photo,
 
-          // rating: updatedProduct.rating,
+            // rating: updatedProduct.rating,
 
-          ...updatedBook,
-        },
-      };
+            ...updatedBook,
+          },
+        };
 
-      const result = await booksCollection.updateOne(filter, book, options);
-      res.send(result);
+        const result = await booksCollection.updateOne(filter, book, options);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
     });
 
     //get some book by category
     app.get("/booksByCategory", async (req, res) => {
-      let query = {};
-      if (req?.query?.categoryName) {
-        query = {
-          categoryName: req.query.categoryName,
-        };
+      try {
+        let query = {};
+        if (req?.query?.categoryName) {
+          query = {
+            categoryName: req.query.categoryName,
+          };
+        }
+        console.log("categoryName", query);
+        const result = await booksCollection.find(query).toArray();
+        res.send(result);
+      } catch (err) {
+        console.log(err);
       }
-      console.log("categoryName", query);
-      const result = await booksCollection.find(query).toArray();
-      res.send(result);
     });
 
     //get all categories
     app.get("/categories", async (req, res) => {
-      const cursor = categoryBooksCollection.find();
-      const result = await cursor.toArray();
+      try {
+        const cursor = categoryBooksCollection.find();
+        const result = await cursor.toArray();
 
-      res.send(result);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
     });
 
+    //delete return book
 
-     //delete return book
+    app.delete("/borrowBooks/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
 
-     app.delete("/borrowBooks/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-
-      const result = await borrowBooksCollection.deleteOne(query);
-      res.send(result);
+        const result = await borrowBooksCollection.deleteOne(query);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
     });
 
     //get one

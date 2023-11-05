@@ -33,6 +33,9 @@ async function run() {
       .db("LibraryManagement")
       .collection("categoryBooks");
     const booksCollection = client.db("LibraryManagement").collection("books");
+    const borrowBooksCollection = client
+      .db("LibraryManagement")
+      .collection("borrowBooks");
 
     //post single book
     app.post("/books", async (req, res) => {
@@ -40,6 +43,15 @@ async function run() {
       console.log(newBook);
 
       const result = await booksCollection.insertOne(newBook);
+      res.send(result);
+    });
+
+    //post single book for borrow
+    app.post("/borrowBooks", async (req, res) => {
+      const newBook = req.body;
+      console.log(newBook);
+
+      const result = await borrowBooksCollection.insertOne(newBook);
       res.send(result);
     });
 
@@ -51,8 +63,16 @@ async function run() {
       res.send(result);
     });
 
-     // update one book
-     app.put("/books/:id", async (req, res) => {
+    // get all borrow books
+    app.get("/borrowBooks", async (req, res) => {
+      const cursor = borrowBooksCollection.find();
+      const result = await cursor.toArray();
+
+      res.send(result);
+    });
+
+    // update one book
+    app.put("/books/:id", async (req, res) => {
       const id = req.params.id;
 
       console.log("update id : ", id);
@@ -73,15 +93,11 @@ async function run() {
 
           // rating: updatedProduct.rating,
 
-          ...updatedBook
+          ...updatedBook,
         },
       };
 
-      const result = await booksCollection.updateOne(
-        filter,
-        book,
-        options
-      );
+      const result = await booksCollection.updateOne(filter, book, options);
       res.send(result);
     });
 
@@ -90,13 +106,13 @@ async function run() {
       let query = {};
       if (req?.query?.categoryName) {
         query = {
-          categoryName: req.query.categoryName};
+          categoryName: req.query.categoryName,
+        };
       }
-      console.log("categoryName",query)
+      console.log("categoryName", query);
       const result = await booksCollection.find(query).toArray();
       res.send(result);
     });
-
 
     //get all categories
     app.get("/categories", async (req, res) => {

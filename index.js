@@ -6,14 +6,23 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 //middleware
-app.use(cors());
+app.use(
+  cors({
+      origin: ['http://localhost:5173',"https://library-cb6f7.web.app"],
+      credentials: true,
+  }),
+)
 app.use(express.json());
 
 // libraryManagement
 // yaeCi4tYLhPEd3v9
+// ACCESS_TOKEN_SECRET=48925043bad6c5938f9e8d56a7812325c88997b1b1603eebc0997bf9e8bd7cf00b5a6200eaeaeea5b23b43f683602957d845df3f3caa251139ad807bad5395a8
 
-const uri =
-  "mongodb+srv://libraryManagement:yaeCi4tYLhPEd3v9@cluster0.mjrato5.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mjrato5.mongodb.net/?retryWrites=true&w=majority`;
+
+// console.log(uri)
+
+// `mongodb+srv://libraryManagement:yaeCi4tYLhPEd3v9@cluster0.mjrato5.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -206,3 +215,14 @@ app.listen(port, () => {
 });
 
 // real a11
+
+
+//  https://library-server-1hry8165t-2eg4rizve.vercel.app
+
+//https://library-server-gh7iei1jc-2eg4rizve.vercel.app
+
+//https://library-server-dcfa5jbzu-2eg4rizve.vercel.app
+
+// https://a11-i2o70nkvc-2eg4rizve.vercel.app
+
+//https://a11-pj5k18qlf-2eg4rizve.vercel.app
